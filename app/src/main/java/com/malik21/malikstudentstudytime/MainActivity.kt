@@ -1,10 +1,13 @@
 package com.malik21.malikstudentstudytime
 
-import android.R
+//import android.R
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,7 +27,11 @@ import androidx.compose.ui.unit.dp
 import com.malik21.malikstudentstudytime.ui.theme.MalikStudentStudyTimeTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.HorizontalAlignmentLine
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.LineHeightStyle
+import kotlin.text.Typography.times
+import com.malik21.malikstudentstudytime.R
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,10 +55,26 @@ fun TestLayout(name: String, modifier: Modifier = Modifier) {
     Row(
         modifier = Modifier.fillMaxSize()
     ) {
-        Column(modifier = Modifier.fillMaxHeight().width(100.dp).background(Color.Yellow),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Column 1")
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(100.dp)
+                .background(Color.Yellow),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            repeat(6) {
+                val context = LocalContext.current
+                Image(
+                    painter = painterResource(id = image_ids[it]),
+                    contentDescription = "Dice ${it + 1}",
+                    modifier.clickable{
+                        Toast.makeText(context,"Click $it", Toast.LENGTH_SHORT).show()
+
+                    }
+                )
+            }
+
         }
         Column(modifier = Modifier.fillMaxHeight().width(100.dp).background(Color.Gray),
             verticalArrangement = Arrangement.Center,
@@ -67,10 +90,26 @@ fun TestLayout(name: String, modifier: Modifier = Modifier) {
     }
 }
 
+@composable
+fun TestLoginScreen(modifier: Modifier = Modifier){
+
+}
+
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun TestPreview() {
     MalikStudentStudyTimeTheme {
         TestLayout("Android")
     }
 }
+private val image_ids = listOf(
+    R.drawable.dice_1,
+    R.drawable.dice_2,
+    R.drawable.dice_3,
+    R.drawable.dice_4,
+    R.drawable.dice_5,
+    R.drawable.dice_6,
+
+)
+
+
