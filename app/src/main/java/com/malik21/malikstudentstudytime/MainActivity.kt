@@ -68,7 +68,9 @@ fun TestLayout(name: String, modifier: Modifier = Modifier) {
                 Image(
                     painter = painterResource(id = image_ids[it]),
                     contentDescription = "Dice ${it + 1}",
-                    modifier.clickable{
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .clickable {
                         Toast.makeText(context,"Click $it", Toast.LENGTH_SHORT).show()
 
                     }
@@ -90,7 +92,7 @@ fun TestLayout(name: String, modifier: Modifier = Modifier) {
     }
 }
 
-@composable
+@Composable
 fun TestLoginScreen(modifier: Modifier = Modifier){
 
 }
