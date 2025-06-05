@@ -48,10 +48,14 @@ fun TestLayout(name: String, modifier: Modifier = Modifier) {
     Row(
         modifier = Modifier.fillMaxSize()
     ) {
-        Column(modifier = Modifier.fillMaxHeight().width(100.dp).background(Color.Yellow)) {
+        Column(modifier = Modifier.fillMaxHeight().width(100.dp).background(Color.Yellow),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = "Column 1")
         }
-        Column(modifier = Modifier.fillMaxHeight().width(100.dp).background(Color.Gray)) {
+        Column(modifier = Modifier.fillMaxHeight().width(100.dp).background(Color.Gray),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = "Column 2")
         }
         Column(modifier = Modifier.fillMaxHeight().fillMaxWidth().background(Color.Green),
