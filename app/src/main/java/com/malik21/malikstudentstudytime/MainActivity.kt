@@ -93,9 +93,14 @@ fun TestLayout(name: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun DashboardScreen(modifier: Modifier = Modifier){
+
+}
+@Composable
 fun TestLoginScreen(modifier: Modifier = Modifier){
 
 }
+
 
 @Preview(showBackground = true)
 @Composable
