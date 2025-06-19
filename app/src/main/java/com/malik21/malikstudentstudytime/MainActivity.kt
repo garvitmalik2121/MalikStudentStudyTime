@@ -30,7 +30,6 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -54,6 +53,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.malik21.malikstudentstudytime.ui.theme.MalikStudentStudyTimeTheme
+
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,13 +128,14 @@ fun DashboardBottomNavigationBar() {
         NavigationBarItem(
             selected = false,
             onClick = {
-                Toast.makeText(context, "Cart clicked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Tasks clicked", Toast.LENGTH_SHORT).show()
             },
             icon = {
-                Icon(Icons.Rounded.ShoppingCart, contentDescription = "Cart", tint = Color.White)
+                Icon(Icons.Default.Check, contentDescription = "Tasks", tint = Color.White)
             },
-            label = { Text("Cart", color = Color.White) }
+            label = { Text("Tasks", color = Color.White) }
         )
+
         NavigationBarItem(
             selected = false,
             onClick = {
