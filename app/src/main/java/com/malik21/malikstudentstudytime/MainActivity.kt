@@ -1,7 +1,6 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.malik21.malikstudentstudytime
-
-//import android.R
-
 
 import android.os.Bundle
 import android.widget.Toast
@@ -29,10 +28,18 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,21 +55,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.malik21.malikstudentstudytime.ui.theme.MalikStudentStudyTimeTheme
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
         setContent {
             MalikStudentStudyTimeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     DashboardScreen(
-                        modifier  = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding)
                     )
-//                    TestLayout(
-//                        name = "Android",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
                 }
             }
         }
@@ -70,67 +71,81 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun TestLayout(name: String, modifier: Modifier = Modifier) {
-    Row(
-        modifier = Modifier.fillMaxSize()
-    ) {
+fun DashboardScreen(modifier: Modifier = Modifier) {
+    Scaffold(
+        topBar = { DashboardTopBar() },
+        bottomBar = { DashboardBottomNavigationBar() }
+    ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(100.dp)
-                .background(Color.Yellow),
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            repeat(6) {
-                val context = LocalContext.current
-                Image(
-                    painter = painterResource(id = image_ids[it]),
-                    contentDescription = "Dice ${it + 1}",
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .clickable {
-                        Toast.makeText(context,"Click $it", Toast.LENGTH_SHORT).show()
+            Spacer(modifier = Modifier.height(16.dp))
+            ProfileHeader(
+                userName = "Garvit Malik",
+                profileImage = painterResource(id = R.drawable.profile_pic)
+            )
 
-                    }
-                )
-            }
-
+            Spacer(modifier = Modifier.height(16.dp))
+            DashboardGrid()
         }
-        Column(modifier = Modifier.fillMaxHeight().width(100.dp).background(Color.Gray),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "Column 2")
-        }
-        Column(modifier = Modifier.fillMaxHeight().fillMaxWidth().background(Color.Green),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally){
-            Text(text = "Column 3")
-        }
-
     }
 }
 
 @Composable
-fun DashboardScreen(modifier: Modifier = Modifier){
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        ProfileHeader(
-            userName = "Garvit Malik",
-            profileImage = painterResource(id = R.drawable.profile_pic)
+fun DashboardTopBar() {
+    TopAppBar(
+        title = { Text("Student Dashboard") },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color(0xFF3F51B5),
+            titleContentColor = Color.White
         )
+    )
+}
 
-        Spacer(modifier = Modifier.height(16.dp))
+@Composable
+fun DashboardBottomNavigationBar() {
+    val context = LocalContext.current
 
-        // Grid of cards - 3 rows with 2 cards each
-        DashboardGrid()
+    NavigationBar(
+        containerColor = Color(0xFF3F51B5),
+        tonalElevation = 4.dp
+    ) {
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+                Toast.makeText(context, "Home clicked", Toast.LENGTH_SHORT).show()
+            },
+            icon = {
+                Icon(Icons.Rounded.Home, contentDescription = "Home", tint = Color.White)
+            },
+            label = { Text("Home", color = Color.White) }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+                Toast.makeText(context, "Cart clicked", Toast.LENGTH_SHORT).show()
+            },
+            icon = {
+                Icon(Icons.Rounded.ShoppingCart, contentDescription = "Cart", tint = Color.White)
+            },
+            label = { Text("Cart", color = Color.White) }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+                Toast.makeText(context, "Account clicked", Toast.LENGTH_SHORT).show()
+            },
+            icon = {
+                Icon(Icons.Rounded.AccountCircle, contentDescription = "Account", tint = Color.White)
+            },
+            label = { Text("Account", color = Color.White) }
+        )
     }
 }
+
 @Composable
 fun ProfileHeader(userName: String, profileImage: Painter) {
     Row(
@@ -164,13 +179,14 @@ fun ProfileHeader(userName: String, profileImage: Painter) {
         }
     }
 }
+
 @Composable
 fun DashboardGrid() {
     val cards = listOf(
         Pair("Tasks", Icons.Default.Check),
         Pair("Messages", Icons.Default.Email),
         Pair("Calendar", Icons.Default.DateRange),
-        Pair("Analytics", Icons.Default.Check),
+        Pair("Analytics", Icons.Default.Info),
         Pair("Settings", Icons.Default.Settings),
         Pair("Help", Icons.Default.Info)
     )
@@ -184,11 +200,14 @@ fun DashboardGrid() {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 DashboardCard(title = cards[i].first, icon = cards[i].second)
-                DashboardCard(title = cards[i + 1].first, icon = cards[i + 1].second)
+                if (i + 1 < cards.size) {
+                    DashboardCard(title = cards[i + 1].first, icon = cards[i + 1].second)
+                }
             }
         }
     }
 }
+
 @Composable
 fun DashboardCard(title: String, icon: ImageVector) {
     val context = LocalContext.current
@@ -209,7 +228,7 @@ fun DashboardCard(title: String, icon: ImageVector) {
         Icon(
             imageVector = icon,
             contentDescription = title,
-            tint = Color(0xFF3F51B5), // Indigo-ish
+            tint = Color(0xFF3F51B5),
             modifier = Modifier.size(36.dp)
         )
 
@@ -225,8 +244,59 @@ fun DashboardCard(title: String, icon: ImageVector) {
 }
 
 @Composable
-fun TestLoginScreen(modifier: Modifier = Modifier){
+fun TestLayout(name: String, modifier: Modifier = Modifier) {
+    Row(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(100.dp)
+                .background(Color.Yellow),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            repeat(6) {
+                val context = LocalContext.current
+                Image(
+                    painter = painterResource(id = image_ids[it]),
+                    contentDescription = "Dice ${it + 1}",
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .clickable {
+                            Toast.makeText(context, "Click $it", Toast.LENGTH_SHORT).show()
+                        }
+                )
+            }
+        }
 
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(100.dp)
+                .background(Color.Gray),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "Column 2")
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()
+                .background(Color.Green),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "Column 3")
+        }
+    }
+}
+
+@Composable
+fun TestLoginScreen(modifier: Modifier = Modifier) {
+    // Placeholder for future login screen
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -236,21 +306,12 @@ fun DashboardScreenPreview() {
         DashboardScreen()
     }
 }
-//@Preview(showBackground = true)
-//@Composable
-//fun TestPreview() {
-//    MalikStudentStudyTimeTheme {
-//        TestLayout("Android")
-//    }
-//}
+
 private val image_ids = listOf(
     R.drawable.dice_1,
     R.drawable.dice_2,
     R.drawable.dice_3,
     R.drawable.dice_4,
     R.drawable.dice_5,
-    R.drawable.dice_6,
-
+    R.drawable.dice_6
 )
-
-
