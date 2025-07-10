@@ -74,8 +74,13 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.malik21.malikstudentstudytime.data.TaskRepository
 import com.malik21.malikstudentstudytime.screen.AppNavigation
+import com.malik21.malikstudentstudytime.screen.HomeScreen
 import com.malik21.malikstudentstudytime.ui.theme.MalikStudentStudyTimeTheme
 import kotlinx.coroutines.launch
 
@@ -90,10 +95,19 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
+@Composable
+fun MyNavigation() {
+    //obtain navController
+    val navController = rememberNavController()
+    //set NavHost and the routes
+    NavHost(navController, startDestination = "home") {
+        composable("DashboardScreen") { DashboardScreen(navController) }
+        composable("TasksScreen") { TasksScreen(navController) }
+    }
+}
 
 @Composable
-fun DashboardScreen(modifier: Modifier = Modifier) {
+fun DashboardScreen(navController: NavController, modifier: Modifier = Modifier) {
     Scaffold(
         topBar = { DashboardTopBar() },
         bottomBar = { DashboardBottomNavigationBar() }
@@ -137,9 +151,7 @@ fun DashboardBottomNavigationBar() {
     ) {
         NavigationBarItem(
             selected = false,
-            onClick = {
-                Toast.makeText(context, "Home clicked", Toast.LENGTH_SHORT).show()
-            },
+            onClick = {navController.navigate("DashboardScreen")},
             icon = {
                 Icon(Icons.Rounded.Home, contentDescription = "Home", tint = Color.White)
             },
@@ -147,9 +159,7 @@ fun DashboardBottomNavigationBar() {
         )
         NavigationBarItem(
             selected = false,
-            onClick = {
-                Toast.makeText(context, "Tasks clicked", Toast.LENGTH_SHORT).show()
-            },
+            onClick = {navController.navigate("detail")},
             icon = {
                 Icon(Icons.Default.Check, contentDescription = "Tasks", tint = Color.White)
             },
@@ -158,9 +168,7 @@ fun DashboardBottomNavigationBar() {
 
         NavigationBarItem(
             selected = false,
-            onClick = {
-                Toast.makeText(context, "Account clicked", Toast.LENGTH_SHORT).show()
-            },
+            onClick = {navController.navigate("detail")},
             icon = {
                 Icon(Icons.Rounded.AccountCircle, contentDescription = "Account", tint = Color.White)
             },
@@ -197,7 +205,7 @@ fun ProfileHeader(userName: String, profileImage: Painter) {
             )
         }
 
-        Button(onClick = { /* Navigate to Edit Profile */ }) {
+        Button(onClick = {navController.navigate("detail")}) {
             Text("Edit Profile")
         }
     }
@@ -338,6 +346,7 @@ data class TaskItem(
 
 @Composable
 fun TasksScreen(
+    navController: NavController,
     modifier: Modifier = Modifier,
     taskRepository: TaskRepository = TaskRepository(LocalContext.current)
 ) {
