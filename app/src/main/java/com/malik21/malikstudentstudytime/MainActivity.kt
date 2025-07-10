@@ -44,6 +44,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
@@ -53,11 +54,14 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,8 +75,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.malik21.malikstudentstudytime.data.TaskRepository
 import com.malik21.malikstudentstudytime.screen.AppNavigation
 import com.malik21.malikstudentstudytime.ui.theme.MalikStudentStudyTimeTheme
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -332,9 +338,19 @@ data class TaskItem(
 )
 
 @Composable
-fun TasksScreen(modifier: Modifier = Modifier) {
-    val taskList = remember { mutableStateListOf<TaskItem>() }
+fun TasksScreen(
+    modifier: Modifier = Modifier,
+    taskRepository: TaskRepository = TaskRepository(LocalContext.current)
+) {
+    val scope = rememberCoroutineScope()
+    val tasks by taskRepository.tasksFlow.collectAsState(initial = emptyList())
+
     var showDialog by remember { mutableStateOf(false) }
+
+    // This holds mutable states for each task, so UI updates properly
+    val taskStates = remember(tasks) {
+        tasks.map { mutableStateOf(it) }.toMutableStateList()
+    }
 
     Scaffold(
         topBar = { TaskTopBar() },
@@ -354,28 +370,23 @@ fun TasksScreen(modifier: Modifier = Modifier) {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            if (taskList.isEmpty()) {
+            if (taskStates.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text("No upcoming tasks", fontSize = 18.sp)
                 }
             } else {
-                // Sort tasks by due date string, pushing nulls to the end
-                val sortedTasks = taskList.sortedWith(compareBy<TaskItem> {
-                    it.dueDate ?: "9999-12-31"
-                })
-
+                val sortedTasks = taskStates.sortedBy {
+                    it.value.dueDate ?: "9999-12-31" // far future for no date
+                }
                 LazyColumn {
-                    items(sortedTasks) { task ->
+                    items(sortedTasks) { taskState ->
                         TaskCard(
-                            task = task,
-                            onCheckedChange = { isChecked ->
-                                val index = taskList.indexOf(task)
-                                if (index != -1) {
-                                    taskList[index] = task.copy(isCompleted = isChecked)
-                                }
-                            },
+                            taskState = taskState,
                             onDelete = {
-                                taskList.remove(task)
+                                taskStates.remove(taskState)
+                                scope.launch {
+                                    taskRepository.saveTasks(taskStates.map { it.value })
+                                }
                             }
                         )
                     }
@@ -385,7 +396,11 @@ fun TasksScreen(modifier: Modifier = Modifier) {
             if (showDialog) {
                 AddTaskDialog(
                     onAdd = { title, dueDate ->
-                        taskList.add(TaskItem(title = title, dueDate = dueDate))
+                        val newTask = TaskItem(title, dueDate)
+                        taskStates.add(mutableStateOf(newTask))
+                        scope.launch {
+                            taskRepository.saveTasks(taskStates.map { it.value })
+                        }
                         showDialog = false
                     },
                     onDismiss = { showDialog = false }
@@ -442,9 +457,15 @@ fun AddTaskDialog(onAdd: (String, String?) -> Unit, onDismiss: () -> Unit) {
 }
 
 @Composable
-fun TaskCard(task: TaskItem, onCheckedChange: (Boolean) -> Unit, onDelete: () -> Unit) {
+fun TaskCard(
+    taskState: MutableState<TaskItem>,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val task = taskState.value
+
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         elevation = CardDefaults.cardElevation(4.dp)
@@ -464,17 +485,27 @@ fun TaskCard(task: TaskItem, onCheckedChange: (Boolean) -> Unit, onDelete: () ->
                     textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
                 )
                 task.dueDate?.let {
-                    Text("Due: $it", color = Color.Gray, fontSize = 14.sp)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Due: $it",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp
+                    )
                 }
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
                     checked = task.isCompleted,
-                    onCheckedChange = onCheckedChange
+                    onCheckedChange = { isChecked ->
+                        taskState.value = task.copy(isCompleted = isChecked)
+                    }
                 )
                 IconButton(onClick = onDelete) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete Task")
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete Task"
+                    )
                 }
             }
         }
