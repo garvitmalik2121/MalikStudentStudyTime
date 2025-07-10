@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -267,69 +266,69 @@ fun DashboardCard(title: String, icon: ImageVector) {
     }
 }
 
-@Composable
-fun TestLayout(name: String, modifier: Modifier = Modifier) {
-    Row(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(100.dp)
-                .background(Color.Yellow),
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            repeat(6) {
-                val context = LocalContext.current
-                Image(
-                    painter = painterResource(id = image_ids[it]),
-                    contentDescription = "Dice ${it + 1}",
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .clickable {
-                            Toast.makeText(context, "Click $it", Toast.LENGTH_SHORT).show()
-                        }
-                )
-            }
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(100.dp)
-                .background(Color.Gray),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "Column 2")
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-                .background(Color.Green),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "Column 3")
-        }
-    }
-}
+//@Composable
+//fun TestLayout(name: String, modifier: Modifier = Modifier) {
+//    Row(
+//        modifier = Modifier.fillMaxSize()
+//    ) {
+//        Column(
+//            modifier = Modifier
+//                .fillMaxHeight()
+//                .width(100.dp)
+//                .background(Color.Yellow),
+//            verticalArrangement = Arrangement.SpaceEvenly,
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            repeat(6) {
+//                val context = LocalContext.current
+//                Image(
+//                    painter = painterResource(id = image_ids[it]),
+//                    contentDescription = "Dice ${it + 1}",
+//                    modifier = Modifier
+//                        .padding(4.dp)
+//                        .clickable {
+//                            Toast.makeText(context, "Click $it", Toast.LENGTH_SHORT).show()
+//                        }
+//                )
+//            }
+//        }
+//
+//        Column(
+//            modifier = Modifier
+//                .fillMaxHeight()
+//                .width(100.dp)
+//                .background(Color.Gray),
+//            verticalArrangement = Arrangement.Center,
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            Text(text = "Column 2")
+//        }
+//
+//        Column(
+//            modifier = Modifier
+//                .fillMaxHeight()
+//                .fillMaxWidth()
+//                .background(Color.Green),
+//            verticalArrangement = Arrangement.Center,
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            Text(text = "Column 3")
+//        }
+//    }
+//}
 
 @Composable
 fun TestLoginScreen(modifier: Modifier = Modifier) {
     // Placeholder for future login screen
 }
 
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun DashboardScreenPreview() {
-//    MalikStudentStudyTimeTheme {
-//        DashboardScreen()
-//    }
-//}
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun DashboardScreenPreview() {
+    MalikStudentStudyTimeTheme {
+        DashboardScreen()
+    }
+}
 
 data class TaskItem(
     val title: String,
@@ -564,14 +563,7 @@ fun TaskBottomNavigationBar() {
         )
     }
 }
-private val image_ids = listOf(
-    R.drawable.dice_1,
-    R.drawable.dice_2,
-    R.drawable.dice_3,
-    R.drawable.dice_4,
-    R.drawable.dice_5,
-    R.drawable.dice_6
-)
+
 
 //@Preview(showBackground = true, showSystemUi = true)
 //@Composable
@@ -610,11 +602,11 @@ private val image_ids = listOf(
 //}
 
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun TasksScreenEmptyPreview() {
-    MalikStudentStudyTimeTheme {
-        // Show TasksScreen with empty task list
-        TasksScreen()
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun TasksScreenEmptyPreview() {
+//    MalikStudentStudyTimeTheme {
+//        // Show TasksScreen with empty task list
+//        TasksScreen()
+//    }
+//}
