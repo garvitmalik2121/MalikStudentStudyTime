@@ -25,10 +25,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
@@ -79,30 +79,26 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.malik21.malikstudentstudytime.data.TaskRepository
-import com.malik21.malikstudentstudytime.screen.AppNavigation
-import com.malik21.malikstudentstudytime.screen.HomeScreen
 import com.malik21.malikstudentstudytime.ui.theme.MalikStudentStudyTimeTheme
 import kotlinx.coroutines.launch
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MalikStudentStudyTimeTheme {
-                   AppNavigation()
-                }
+                AppNavigation()
             }
         }
     }
+}
+
 @Composable
-fun MyNavigation() {
-    //obtain navController
+fun AppNavigation() {
     val navController = rememberNavController()
-    //set NavHost and the routes
-    NavHost(navController, startDestination = "home") {
-        composable("DashboardScreen") { DashboardScreen(navController) }
-        composable("TasksScreen") { TasksScreen(navController) }
+    NavHost(navController = navController, startDestination = "Dashboard") {
+        composable("Dashboard") { DashboardScreen(navController) }
+        composable("Tasks") { TasksScreen(navController) }
     }
 }
 
@@ -110,7 +106,7 @@ fun MyNavigation() {
 fun DashboardScreen(navController: NavController, modifier: Modifier = Modifier) {
     Scaffold(
         topBar = { DashboardTopBar() },
-        bottomBar = { DashboardBottomNavigationBar() }
+        bottomBar = { DashboardBottomNavigationBar(navController) }
     ) { paddingValues ->
         Column(
             modifier = modifier
@@ -121,7 +117,8 @@ fun DashboardScreen(navController: NavController, modifier: Modifier = Modifier)
             Spacer(modifier = Modifier.height(16.dp))
             ProfileHeader(
                 userName = "Garvit Malik",
-                profileImage = painterResource(id = R.drawable.profile_pic)
+                profileImage = painterResource(id = R.drawable.profile_pic),
+                navController = navController
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -142,47 +139,33 @@ fun DashboardTopBar() {
 }
 
 @Composable
-fun DashboardBottomNavigationBar() {
-    val context = LocalContext.current
-
-    NavigationBar(
-        containerColor = Color(0xFF3F51B5),
-        tonalElevation = 4.dp
-    ) {
+fun DashboardBottomNavigationBar(navController: NavController) {
+    NavigationBar(containerColor = Color(0xFF3F51B5), tonalElevation = 4.dp) {
         NavigationBarItem(
             selected = false,
-            onClick = {navController.navigate("DashboardScreen")},
-            icon = {
-                Icon(Icons.Rounded.Home, contentDescription = "Home", tint = Color.White)
-            },
+            onClick = { navController.navigate("Dashboard") },
+            icon = { Icon(Icons.Rounded.Home, contentDescription = "Home", tint = Color.White) },
             label = { Text("Home", color = Color.White) }
         )
         NavigationBarItem(
             selected = false,
-            onClick = {navController.navigate("detail")},
-            icon = {
-                Icon(Icons.Default.Check, contentDescription = "Tasks", tint = Color.White)
-            },
+            onClick = { navController.navigate("Tasks") },
+            icon = { Icon(Icons.Default.Check, contentDescription = "Tasks", tint = Color.White) },
             label = { Text("Tasks", color = Color.White) }
         )
-
         NavigationBarItem(
             selected = false,
-            onClick = {navController.navigate("detail")},
-            icon = {
-                Icon(Icons.Rounded.AccountCircle, contentDescription = "Account", tint = Color.White)
-            },
+            onClick = {},
+            icon = { Icon(Icons.Rounded.AccountCircle, contentDescription = "Account", tint = Color.White) },
             label = { Text("Account", color = Color.White) }
         )
     }
 }
 
 @Composable
-fun ProfileHeader(userName: String, profileImage: Painter) {
+fun ProfileHeader(userName: String, profileImage: Painter, navController: NavController) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+        modifier = Modifier.fillMaxWidth().padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -190,22 +173,12 @@ fun ProfileHeader(userName: String, profileImage: Painter) {
             Image(
                 painter = profileImage,
                 contentDescription = "Profile Picture",
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, Color.Gray, CircleShape)
+                modifier = Modifier.size(64.dp).clip(CircleShape).border(2.dp, Color.Gray, CircleShape)
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
-            Text(
-                text = userName,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Text(text = userName, fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
-
-        Button(onClick = {navController.navigate("detail")}) {
+        Button(onClick = { navController.navigate("Tasks") }) {
             Text("Edit Profile")
         }
     }
@@ -214,25 +187,22 @@ fun ProfileHeader(userName: String, profileImage: Painter) {
 @Composable
 fun DashboardGrid() {
     val cards = listOf(
-        Pair("Tasks", Icons.Default.Check),
-        Pair("Messages", Icons.Default.Email),
-        Pair("Calendar", Icons.Default.DateRange),
-        Pair("Analytics", Icons.Default.Info),
-        Pair("Settings", Icons.Default.Settings),
-        Pair("Help", Icons.Default.Info)
+        "Tasks" to Icons.Default.Check,
+        "Messages" to Icons.Default.Email,
+        "Calendar" to Icons.Default.DateRange,
+        "Analytics" to Icons.Default.Info,
+        "Settings" to Icons.Default.Settings,
+        "Help" to Icons.Default.Info
     )
-
     Column {
         for (i in cards.indices step 2) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                DashboardCard(title = cards[i].first, icon = cards[i].second)
+                DashboardCard(cards[i].first, cards[i].second)
                 if (i + 1 < cards.size) {
-                    DashboardCard(title = cards[i + 1].first, icon = cards[i + 1].second)
+                    DashboardCard(cards[i + 1].first, cards[i + 1].second)
                 }
             }
         }
@@ -242,12 +212,11 @@ fun DashboardGrid() {
 @Composable
 fun DashboardCard(title: String, icon: ImageVector) {
     val context = LocalContext.current
-
     Column(
         modifier = Modifier
             .width(160.dp)
             .height(120.dp)
-            .clip(shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+            .clip(MaterialTheme.shapes.medium)
             .background(Color.White)
             .clickable {
                 Toast.makeText(context, "$title Clicked", Toast.LENGTH_SHORT).show()
@@ -256,138 +225,49 @@ fun DashboardCard(title: String, icon: ImageVector) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = title,
-            tint = Color(0xFF3F51B5),
-            modifier = Modifier.size(36.dp)
-        )
-
+        Icon(imageVector = icon, contentDescription = title, tint = Color(0xFF3F51B5), modifier = Modifier.size(36.dp))
         Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = title,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.Black
-        )
+        Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.Medium, color = Color.Black)
     }
 }
 
-//@Composable
-//fun TestLayout(name: String, modifier: Modifier = Modifier) {
-//    Row(
-//        modifier = Modifier.fillMaxSize()
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxHeight()
-//                .width(100.dp)
-//                .background(Color.Yellow),
-//            verticalArrangement = Arrangement.SpaceEvenly,
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            repeat(6) {
-//                val context = LocalContext.current
-//                Image(
-//                    painter = painterResource(id = image_ids[it]),
-//                    contentDescription = "Dice ${it + 1}",
-//                    modifier = Modifier
-//                        .padding(4.dp)
-//                        .clickable {
-//                            Toast.makeText(context, "Click $it", Toast.LENGTH_SHORT).show()
-//                        }
-//                )
-//            }
-//        }
-//
-//        Column(
-//            modifier = Modifier
-//                .fillMaxHeight()
-//                .width(100.dp)
-//                .background(Color.Gray),
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            Text(text = "Column 2")
-//        }
-//
-//        Column(
-//            modifier = Modifier
-//                .fillMaxHeight()
-//                .fillMaxWidth()
-//                .background(Color.Green),
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            Text(text = "Column 3")
-//        }
-//    }
-//}
-
 @Composable
-fun TestLoginScreen(modifier: Modifier = Modifier) {
-    // Placeholder for future login screen
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun DashboardScreenPreview() {
-    MalikStudentStudyTimeTheme {
-        DashboardScreen()
-    }
-}
-
-data class TaskItem(
-    val title: String,
-    val dueDate: String? = null,  // yyyy-MM-dd format or null
-    val isCompleted: Boolean = false
-)
-
-@Composable
-fun TasksScreen(
-    navController: NavController,
-    modifier: Modifier = Modifier,
-    taskRepository: TaskRepository = TaskRepository(LocalContext.current)
-) {
+fun TasksScreen(navController: NavController, taskRepository: TaskRepository = TaskRepository(LocalContext.current)) {
     val scope = rememberCoroutineScope()
     val tasks by taskRepository.tasksFlow.collectAsState(initial = emptyList())
-
     var showDialog by remember { mutableStateOf(false) }
-
-    // This holds mutable states for each task, so UI updates properly
-    val taskStates = remember(tasks) {
-        tasks.map { mutableStateOf(it) }.toMutableStateList()
-    }
+    val taskStates = remember(tasks) { tasks.map { mutableStateOf(it) }.toMutableStateList() }
 
     Scaffold(
-        topBar = { TaskTopBar() },
-        bottomBar = { TaskBottomNavigationBar() },
+        topBar = {
+            TopAppBar(
+                title = { Text("Tasks") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF3F51B5),
+                    titleContentColor = Color.White
+                )
+            )
+        },
+        bottomBar = { DashboardBottomNavigationBar(navController) },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showDialog = true },
                 containerColor = Color(0xFF3F51B5)
             ) {
-                Icon(Icons.Default.Edit, contentDescription = "Add Task", tint = Color.White)
+                Icon(Icons.Default.Add, contentDescription = "Add Task", tint = Color.White)
             }
         }
     ) { padding ->
         Column(
-            modifier = modifier
-                .padding(padding)
-                .fillMaxSize()
-                .padding(16.dp)
+            modifier = Modifier.padding(padding).fillMaxSize().padding(16.dp)
         ) {
             if (taskStates.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text("No upcoming tasks", fontSize = 18.sp)
                 }
             } else {
-                val sortedTasks = taskStates.sortedBy {
-                    it.value.dueDate ?: "9999-12-31" // far future for no date
-                }
                 LazyColumn {
-                    items(sortedTasks) { taskState ->
+                    items(taskStates) { taskState ->
                         TaskCard(
                             taskState = taskState,
                             onDelete = {
@@ -428,20 +308,12 @@ fun AddTaskDialog(onAdd: (String, String?) -> Unit, onDismiss: () -> Unit) {
         confirmButton = {
             TextButton(
                 onClick = {
-                    val dueDateString = if (dateText.isNotBlank()) dateText else null
-                    if (title.isNotBlank()) {
-                        onAdd(title, dueDateString)
-                    }
+                    val dueDate = if (dateText.isNotBlank()) dateText else null
+                    if (title.isNotBlank()) onAdd(title, dueDate)
                 }
-            ) {
-                Text("Add")
-            }
+            ) { Text("Add") }
         },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
         title = { Text("New Task") },
         text = {
             Column {
@@ -456,7 +328,6 @@ fun AddTaskDialog(onAdd: (String, String?) -> Unit, onDismiss: () -> Unit) {
                     value = dateText,
                     onValueChange = { dateText = it },
                     label = { Text("Due Date (yyyy-MM-dd)") },
-                    placeholder = { Text("Optional") },
                     singleLine = true
                 )
             }
@@ -465,23 +336,14 @@ fun AddTaskDialog(onAdd: (String, String?) -> Unit, onDismiss: () -> Unit) {
 }
 
 @Composable
-fun TaskCard(
-    taskState: MutableState<TaskItem>,
-    onDelete: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun TaskCard(taskState: MutableState<TaskItem>, onDelete: () -> Unit) {
     val task = taskState.value
-
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -494,128 +356,28 @@ fun TaskCard(
                 )
                 task.dueDate?.let {
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Due: $it",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 14.sp
-                    )
+                    Text("Due: $it", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
-
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
                     checked = task.isCompleted,
-                    onCheckedChange = { isChecked ->
-                        taskState.value = task.copy(isCompleted = isChecked)
-                    }
+                    onCheckedChange = { isChecked -> taskState.value = task.copy(isCompleted = isChecked) }
                 )
                 IconButton(onClick = onDelete) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete Task"
-                    )
+                    Icon(Icons.Default.Delete, contentDescription = "Delete Task")
                 }
             }
         }
     }
 }
 
+data class TaskItem(val title: String, val dueDate: String? = null, val isCompleted: Boolean = false)
+
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun TaskTopBar() {
-    TopAppBar(
-        title = { Text("Tasks") },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFF3F51B5),
-            titleContentColor = Color.White
-        )
-    )
-}
-
-@Composable
-fun TaskBottomNavigationBar() {
-    val context = LocalContext.current
-
-    NavigationBar(
-        containerColor = Color(0xFF3F51B5),
-        tonalElevation = 4.dp
-    ) {
-        NavigationBarItem(
-            selected = false,
-            onClick = {
-                Toast.makeText(context, "Home clicked", Toast.LENGTH_SHORT).show()
-            },
-            icon = {
-                Icon(Icons.Rounded.Home, contentDescription = "Home", tint = Color.White)
-            },
-            label = { Text("Home", color = Color.White) }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = {
-                Toast.makeText(context, "Tasks clicked", Toast.LENGTH_SHORT).show()
-            },
-            icon = {
-                Icon(Icons.Default.Check, contentDescription = "Tasks", tint = Color.White)
-            },
-            label = { Text("Tasks", color = Color.White) }
-        )
-
-        NavigationBarItem(
-            selected = false,
-            onClick = {
-                Toast.makeText(context, "Account clicked", Toast.LENGTH_SHORT).show()
-            },
-            icon = {
-                Icon(Icons.Rounded.AccountCircle, contentDescription = "Account", tint = Color.White)
-            },
-            label = { Text("Account", color = Color.White) }
-        )
+fun DashboardScreenPreview() {
+    MalikStudentStudyTimeTheme {
+        DashboardScreen(navController = rememberNavController())
     }
 }
-
-
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun TasksScreenPreview() {
-//    MalikStudentStudyTimeTheme {
-//        // Provide sample tasks for preview
-//        val sampleTasks = listOf(
-//            TaskItem(title = "Finish Assignment", dueDate = "2025-07-15", isCompleted = false),
-//            TaskItem(title = "Buy groceries", dueDate = null, isCompleted = true),
-//            TaskItem(title = "Doctor Appointment", dueDate = "2025-07-12", isCompleted = false),
-//            TaskItem(title = "Call Mom", dueDate = "2025-07-20", isCompleted = false),
-//        )
-//
-//        // Because TasksScreen uses internal state, create a wrapper to display the list only
-//        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-//            if (sampleTasks.isEmpty()) {
-//                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-//                    Text("No upcoming tasks", fontSize = 18.sp)
-//                }
-//            } else {
-//                val sortedTasks = sampleTasks.sortedWith(compareBy<TaskItem> {
-//                    it.dueDate ?: "9999-12-31"
-//                })
-//                LazyColumn {
-//                    items(sortedTasks) { task ->
-//                        TaskCard(
-//                            task = task,
-//                            onCheckedChange = {},
-//                            onDelete = {}
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-
-
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun TasksScreenEmptyPreview() {
-//    MalikStudentStudyTimeTheme {
-//        // Show TasksScreen with empty task list
-//        TasksScreen()
-//    }
-//}
