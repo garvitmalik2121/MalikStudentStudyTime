@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("org.jetbrains.kotlin.kapt") // ✅ FIXED
+    id("org.jetbrains.kotlin.kapt") // ✅ Kapt plugin for annotation processing
     kotlin("plugin.serialization") version "1.9.0"
 }
 
@@ -29,22 +29,29 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        // Enable core library desugaring for Java 8+ APIs (e.g. java.time)
+        isCoreLibraryDesugaringEnabled = true
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
     }
 }
 
 dependencies {
-
+    // AndroidX Core and Lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+
+    // Compose and Material3
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -53,6 +60,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
 
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -60,13 +68,26 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    // DataStore Preferences (put dependency string inside quotes)
+
+    // DataStore Preferences
     implementation("androidx.datastore:datastore-preferences:1.0.0")
-    // Kotlin serialization for JSON (also inside quotes)
+
+    // Kotlin Serialization for JSON
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+
+    // Room Database
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
+
+    // Retrofit Networking
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // ComposeCalendar (Calendar UI)
+    implementation("io.github.boguszpawlowski.composecalendar:composecalendar:1.4.0")
+    implementation("io.github.boguszpawlowski.composecalendar:kotlinx-datetime:1.4.0")
+
+    // Core Library Desugaring (required for Java 8+ time APIs on older Android)
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }

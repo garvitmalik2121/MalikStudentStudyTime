@@ -26,6 +26,7 @@ import com.malik21.malikstudentstudytime.data.TaskRepository
 import com.malik21.malikstudentstudytime.screen.AccountScreen
 import com.malik21.malikstudentstudytime.screen.DashboardScreen
 import com.malik21.malikstudentstudytime.screen.SettingsScreen
+import com.malik21.malikstudentstudytime.screen.SimpleCalendarScreen
 import com.malik21.malikstudentstudytime.screen.TasksScreen
 import com.malik21.malikstudentstudytime.viewmodel.TaskViewModel
 import com.malik21.malikstudentstudytime.viewmodel.TaskViewModelFactory
@@ -80,24 +81,24 @@ class MainActivity : ComponentActivity() {
                     composable("tasks") {
                         TasksScreen(navController = navController, viewModel = viewModel)
                     }
-                    composable("notification") {
-                        NotificationScreen(navController = navController)
-                    }
+//                    composable("notification") {
+//                        NotificationScreen(navController = navController)
+//                    }
                     composable("calendar") {
-                        CalendarScreen(navController = navController)
+                        SimpleCalendarScreen(navController = navController, viewModel = viewModel)
                     }
-                    composable("analytics") {
-                        AnalyticsScreen(navController = navController)
-                    }
+//                    composable("analytics") {
+//                        AnalyticsScreen(navController = navController)
+//                    }
                     composable("account") {
                         AccountScreen(navController = navController)
                     }
                     composable("settings") {
                         SettingsScreen(navController = navController)
                     }
-                    composable("help") {
-                        HelpScreen(navController = navController)
-                    }
+//                    composable("help") {
+//                        HelpScreen(navController = navController)
+//                    }
                 }
             }
         }

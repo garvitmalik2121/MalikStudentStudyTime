@@ -97,7 +97,7 @@ fun ProfileHeader(userName: String, profileImage: androidx.compose.ui.graphics.p
 fun DashboardGrid(navController: NavController) {
     val cards = listOf(
         "Tasks" to Icons.Default.Check,
-        "Notification" to Icons.Default.Notifications,
+        "Notification" to Icons.Default.Notifications, // ✅ Renamed from "Messages" to "Notification"
         "Calendar" to Icons.Default.DateRange,
         "Analytics" to Icons.Default.Info,
         "Settings" to Icons.Default.Settings,
@@ -111,11 +111,26 @@ fun DashboardGrid(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 DashboardCard(cards[i].first, cards[i].second) {
-                    if (cards[i].first == "Tasks") navController.navigate("tasks")
+                    // ✅ Navigation logic for each card
+                    when (cards[i].first) {
+                        "Tasks" -> navController.navigate("tasks")
+                        "Notification" -> navController.navigate("notification")
+                        "Calendar" -> navController.navigate("calendar")
+                        "Analytics" -> navController.navigate("analytics")
+                        "Settings" -> navController.navigate("settings")
+                        "Help" -> navController.navigate("help")
+                    }
                 }
                 if (i + 1 < cards.size) {
                     DashboardCard(cards[i + 1].first, cards[i + 1].second) {
-                        if (cards[i + 1].first == "Tasks") navController.navigate("tasks")
+                        when (cards[i + 1].first) {
+                            "Tasks" -> navController.navigate("tasks")
+                            "Notification" -> navController.navigate("notification")
+                            "Calendar" -> navController.navigate("calendar")
+                            "Analytics" -> navController.navigate("analytics")
+                            "Settings" -> navController.navigate("settings")
+                            "Help" -> navController.navigate("help")
+                        }
                     }
                 }
             }
