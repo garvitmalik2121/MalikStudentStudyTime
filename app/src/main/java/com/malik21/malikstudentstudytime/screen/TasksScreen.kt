@@ -1,6 +1,8 @@
 package com.malik21.malikstudentstudytime.screen
 
+import android.app.DatePickerDialog
 import android.media.MediaPlayer
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +46,8 @@ import androidx.navigation.NavController
 import com.malik21.malikstudentstudytime.R
 import com.malik21.malikstudentstudytime.data.TaskItem
 import com.malik21.malikstudentstudytime.viewmodel.TaskViewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,7 +78,8 @@ fun TasksScreen(navController: NavController, viewModel: TaskViewModel) {
             } else {
                 LazyColumn {
                     items(tasks) { task ->
-                        TaskCard(task = task,
+                        TaskCard(
+                            task = task,
                             onCheckedChange = {
                                 viewModel.updateTask(task.copy(isCompleted = it))
                                 player.start()
@@ -82,19 +87,23 @@ fun TasksScreen(navController: NavController, viewModel: TaskViewModel) {
                             onDelete = {
                                 viewModel.deleteTask(task)
                                 player.start()
-                            })
+                            }
+                        )
                     }
                 }
             }
 
             if (showDialog) {
-                AddTaskDialog(onAdd = { title, dueDate ->
-                    viewModel.insertTask(TaskItem(title, dueDate))
-                    showDialog = false
-                    player.start()
-                }, onDismiss = {
-                    showDialog = false
-                })
+                AddTaskDialog(
+                    onAdd = { title, dueDate ->
+                        viewModel.insertTask(TaskItem(title, dueDate))
+                        showDialog = false
+                        player.start()
+                    },
+                    onDismiss = {
+                        showDialog = false
+                    }
+                )
             }
         }
     }
@@ -136,20 +145,40 @@ fun TaskCard(task: TaskItem, onCheckedChange: (Boolean) -> Unit, onDelete: () ->
 }
 
 @Composable
-fun AddTaskDialog(onAdd: (String, String?) -> Unit, onDismiss: () -> Unit) {
+fun AddTaskDialog(onAdd: (String, String) -> Unit, onDismiss: () -> Unit) {
     var title by remember { mutableStateOf("") }
     var dueDate by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+    val initialDate = runCatching { LocalDate.parse(dueDate, formatter) }.getOrNull() ?: LocalDate.now()
+
+    val datePickerDialog = remember {
+        DatePickerDialog(
+            context,
+            { _, year, month, dayOfMonth ->
+                val selectedDate = LocalDate.of(year, month + 1, dayOfMonth)
+                dueDate = selectedDate.format(formatter)
+            },
+            initialDate.year,
+            initialDate.monthValue - 1,
+            initialDate.dayOfMonth
+        )
+    }
+
+    val isAddEnabled = title.isNotBlank() && dueDate.isNotBlank()
 
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
                 onClick = {
-                    if (title.isNotBlank()) {
-                        val due = if (dueDate.isBlank()) null else dueDate
-                        onAdd(title.trim(), due)
+                    if (isAddEnabled) {
+                        onAdd(title.trim(), dueDate)
                     }
-                }
+                },
+                enabled = isAddEnabled
             ) {
                 Text("Add")
             }
@@ -171,9 +200,13 @@ fun AddTaskDialog(onAdd: (String, String?) -> Unit, onDismiss: () -> Unit) {
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = dueDate,
-                    onValueChange = { dueDate = it },
-                    label = { Text("Due Date (optional)") },
-                    singleLine = true
+                    onValueChange = { /* ignore typing */ },
+                    label = { Text("Due Date (required)") },
+                    singleLine = true,
+                    readOnly = true,
+                    modifier = Modifier.clickable {
+                        datePickerDialog.show()
+                    }
                 )
             }
         }
