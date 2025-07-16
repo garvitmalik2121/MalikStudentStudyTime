@@ -97,44 +97,26 @@ fun ProfileHeader(userName: String, profileImage: androidx.compose.ui.graphics.p
 fun DashboardGrid(navController: NavController) {
     val cards = listOf(
         "Tasks" to Icons.Default.Check,
-        "Notification" to Icons.Default.Notifications, // ✅ Renamed from "Messages" to "Notification"
+        "Notification" to Icons.Default.Notifications,
         "Calendar" to Icons.Default.DateRange,
-        "Analytics" to Icons.Default.Info,
         "Settings" to Icons.Default.Settings,
         "Help" to Icons.Default.Info
     )
 
-    Column {
-        for (i in cards.indices step 2) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                DashboardCard(cards[i].first, cards[i].second) {
-                    // ✅ Navigation logic for each card
-                    when (cards[i].first) {
-                        "Tasks" -> navController.navigate("tasks")
-                        "Notification" -> navController.navigate("notification")
-                        "Calendar" -> navController.navigate("calendar")
-                        "Analytics" -> navController.navigate("analytics")
-                        "Settings" -> navController.navigate("settings")
-                        "Help" -> navController.navigate("help")
-                    }
-                }
-                if (i + 1 < cards.size) {
-                    DashboardCard(cards[i + 1].first, cards[i + 1].second) {
-                        when (cards[i + 1].first) {
-                            "Tasks" -> navController.navigate("tasks")
-                            "Notification" -> navController.navigate("notification")
-                            "Calendar" -> navController.navigate("calendar")
-                            "Analytics" -> navController.navigate("analytics")
-                            "Settings" -> navController.navigate("settings")
-                            "Help" -> navController.navigate("help")
-                        }
-                    }
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp) // spacing between cards
+    ) {
+        cards.forEach { (title, icon) ->
+            DashboardCard(title, icon) {
+                when (title) {
+                    "Tasks" -> navController.navigate("tasks")
+                    "Notification" -> navController.navigate("notification")
+                    "Calendar" -> navController.navigate("calendar")
+                    "Settings" -> navController.navigate("settings")
+                    "Help" -> navController.navigate("help")
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
@@ -143,22 +125,21 @@ fun DashboardGrid(navController: NavController) {
 fun DashboardCard(title: String, icon: ImageVector, onClick: () -> Unit) {
     Card(
         modifier = Modifier
-            .width(160.dp)
-            .height(120.dp)
+            .fillMaxWidth()  // full width card
+            .height(80.dp)    // slightly smaller height for single column layout
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(icon, contentDescription = title, tint = Color(0xFF3F51B5), modifier = Modifier.size(40.dp))
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(title, fontWeight = FontWeight.Medium, fontSize = 16.sp)
+            Icon(icon, contentDescription = title, tint = Color(0xFF3F51B5), modifier = Modifier.size(36.dp))
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(title, fontWeight = FontWeight.Medium, fontSize = 18.sp)
         }
     }
 }
