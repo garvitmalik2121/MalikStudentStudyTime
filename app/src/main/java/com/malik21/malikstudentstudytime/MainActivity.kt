@@ -8,21 +8,27 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.malik21.malikstudentstudytime.data.TaskRepository
-import com.malik21.malikstudentstudytime.ui.*
-import com.malik21.malikstudentstudytime.viewmodel.TaskViewModel
-import com.malik21.malikstudentstudytime.viewmodel.TaskViewModelFactory
-import androidx.compose.ui.Modifier
 import com.malik21.malikstudentstudytime.screen.AccountScreen
 import com.malik21.malikstudentstudytime.screen.DashboardScreen
 import com.malik21.malikstudentstudytime.screen.SettingsScreen
 import com.malik21.malikstudentstudytime.screen.TasksScreen
+import com.malik21.malikstudentstudytime.viewmodel.TaskViewModel
+import com.malik21.malikstudentstudytime.viewmodel.TaskViewModelFactory
 
 
 class MainActivity : ComponentActivity() {
