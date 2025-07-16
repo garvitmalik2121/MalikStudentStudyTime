@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.malik21.malikstudentstudytime.data.TaskRepository
 import com.malik21.malikstudentstudytime.screen.AccountScreen
 import com.malik21.malikstudentstudytime.screen.DashboardScreen
+import com.malik21.malikstudentstudytime.screen.NotificationsScreen
 import com.malik21.malikstudentstudytime.screen.SettingsScreen
 import com.malik21.malikstudentstudytime.screen.SimpleCalendarScreen
 import com.malik21.malikstudentstudytime.screen.TasksScreen
@@ -81,9 +82,9 @@ class MainActivity : ComponentActivity() {
                     composable("tasks") {
                         TasksScreen(navController = navController, viewModel = viewModel)
                     }
-//                    composable("notification") {
-//                        NotificationScreen(navController = navController)
-//                    }
+                    composable("notification") {
+                        NotificationsScreen(navController = navController, viewModel = viewModel)
+                    }
                     composable("calendar") {
                         SimpleCalendarScreen(navController = navController, viewModel = viewModel)
                     }

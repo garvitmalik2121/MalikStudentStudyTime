@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.malik21.malikstudentstudytime.screen.AccountScreen
 import com.malik21.malikstudentstudytime.screen.DashboardScreen
+import com.malik21.malikstudentstudytime.screen.NotificationsScreen
 import com.malik21.malikstudentstudytime.screen.SettingsScreen
 import com.malik21.malikstudentstudytime.screen.SimpleCalendarScreen
 import com.malik21.malikstudentstudytime.screen.TasksScreen
@@ -16,7 +17,7 @@ fun AppNavigation(navController: NavHostController, viewModel: TaskViewModel) {
     NavHost(navController, startDestination = "dashboard") {
         composable("dashboard") { DashboardScreen(navController) }
         composable("tasks") { TasksScreen(navController, viewModel = viewModel) }
-//        composable("notification") { NotificationScreen(navController) }
+        composable("notification") { NotificationsScreen(navController, viewModel = viewModel) }
         composable("calendar") { SimpleCalendarScreen(navController, viewModel = viewModel) }
 //        composable("analytics") { AnalyticsScreen(navController) }
         composable("account") { AccountScreen(navController) }
