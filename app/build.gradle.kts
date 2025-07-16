@@ -90,4 +90,8 @@ dependencies {
 
     // Core Library Desugaring (required for Java 8+ time APIs on older Android)
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.compose.material:material-icons-extended:<compose_version>")
+
 }
