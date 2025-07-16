@@ -15,7 +15,11 @@ fun AppNavigation(navController: NavHostController, viewModel: TaskViewModel) {
     NavHost(navController, startDestination = "dashboard") {
         composable("dashboard") { DashboardScreen(navController) }
         composable("tasks") { TasksScreen(navController, viewModel = viewModel) }
+        composable("notification") { NotificationScreen(navController) }
+        composable("calendar") { CalendarScreen(navController) }
+        composable("analytics") { AnalyticsScreen(navController) }
         composable("account") { AccountScreen(navController) }
         composable("settings") { SettingsScreen(navController) }
+        composable("help") { HelpScreen(navController) }
     }
 }

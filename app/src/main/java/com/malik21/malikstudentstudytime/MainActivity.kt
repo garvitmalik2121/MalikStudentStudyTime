@@ -80,11 +80,23 @@ class MainActivity : ComponentActivity() {
                     composable("tasks") {
                         TasksScreen(navController = navController, viewModel = viewModel)
                     }
+                    composable("notification") {
+                        NotificationScreen(navController = navController)
+                    }
+                    composable("calendar") {
+                        CalendarScreen(navController = navController)
+                    }
+                    composable("analytics") {
+                        AnalyticsScreen(navController = navController)
+                    }
                     composable("account") {
                         AccountScreen(navController = navController)
                     }
                     composable("settings") {
                         SettingsScreen(navController = navController)
+                    }
+                    composable("help") {
+                        HelpScreen(navController = navController)
                     }
                 }
             }

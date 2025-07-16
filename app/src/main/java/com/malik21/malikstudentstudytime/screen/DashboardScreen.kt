@@ -16,8 +16,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -60,7 +60,7 @@ fun DashboardScreen(navController: NavController) {
         ) {
             ProfileHeader(
                 userName = "Garvit Malik",
-                profileImage = painterResource(id = R.drawable.ic_launcher_foreground),
+                profileImage = painterResource(id = R.drawable.profile_pic),
                 navController = navController
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -97,7 +97,7 @@ fun ProfileHeader(userName: String, profileImage: androidx.compose.ui.graphics.p
 fun DashboardGrid(navController: NavController) {
     val cards = listOf(
         "Tasks" to Icons.Default.Check,
-        "Messages" to Icons.Default.Email,
+        "Notification" to Icons.Default.Notifications,
         "Calendar" to Icons.Default.DateRange,
         "Analytics" to Icons.Default.Info,
         "Settings" to Icons.Default.Settings,
