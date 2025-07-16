@@ -6,6 +6,7 @@ package com.malik21.malikstudentstudytime
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -17,6 +18,12 @@ import com.malik21.malikstudentstudytime.data.TaskRepository
 import com.malik21.malikstudentstudytime.ui.*
 import com.malik21.malikstudentstudytime.viewmodel.TaskViewModel
 import com.malik21.malikstudentstudytime.viewmodel.TaskViewModelFactory
+import androidx.compose.ui.Modifier
+import com.malik21.malikstudentstudytime.screen.AccountScreen
+import com.malik21.malikstudentstudytime.screen.DashboardScreen
+import com.malik21.malikstudentstudytime.screen.SettingsScreen
+import com.malik21.malikstudentstudytime.screen.TasksScreen
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
