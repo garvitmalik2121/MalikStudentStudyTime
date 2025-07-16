@@ -2,6 +2,7 @@ package com.malik21.malikstudentstudytime.screen
 
 import android.app.DatePickerDialog
 import android.media.MediaPlayer
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -144,17 +145,23 @@ fun TaskCard(task: TaskItem, onCheckedChange: (Boolean) -> Unit, onDelete: () ->
     }
 }
 
+
 @Composable
-fun AddTaskDialog(onAdd: (String, String) -> Unit, onDismiss: () -> Unit) {
+fun AddTaskDialog(
+    onAdd: (String, String) -> Unit,
+    onDismiss: () -> Unit
+) {
     var title by remember { mutableStateOf("") }
     var dueDate by remember { mutableStateOf("") }
     val context = LocalContext.current
 
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
+    // Parse or fallback to today
     val initialDate = runCatching { LocalDate.parse(dueDate, formatter) }.getOrNull() ?: LocalDate.now()
 
-    val datePickerDialog = remember {
+    // Create DatePickerDialog, recreate when dueDate changes
+    val datePickerDialog = remember(dueDate) {
         DatePickerDialog(
             context,
             { _, year, month, dayOfMonth ->
@@ -171,6 +178,33 @@ fun AddTaskDialog(onAdd: (String, String) -> Unit, onDismiss: () -> Unit) {
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        title = { Text("Add New Task") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = { Text("Task Title") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Clickable text styled as input for due date
+                Text(
+                    text = if (dueDate.isEmpty()) "Select Due Date" else dueDate,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            Toast.makeText(context, "Opening date picker", Toast.LENGTH_SHORT).show()
+                            datePickerDialog.show()
+                        }
+                        .padding(16.dp),
+                    style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
+                )
+            }
+        },
         confirmButton = {
             TextButton(
                 onClick = {
@@ -186,28 +220,6 @@ fun AddTaskDialog(onAdd: (String, String) -> Unit, onDismiss: () -> Unit) {
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text("Cancel")
-            }
-        },
-        title = { Text("Add New Task") },
-        text = {
-            Column {
-                OutlinedTextField(
-                    value = title,
-                    onValueChange = { title = it },
-                    label = { Text("Task Title") },
-                    singleLine = true
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                OutlinedTextField(
-                    value = dueDate,
-                    onValueChange = { /* ignore typing */ },
-                    label = { Text("Due Date (required)") },
-                    singleLine = true,
-                    readOnly = true,
-                    modifier = Modifier.clickable {
-                        datePickerDialog.show()
-                    }
-                )
             }
         }
     )
