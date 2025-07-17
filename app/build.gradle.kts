@@ -98,5 +98,12 @@ dependencies {
     androidTestImplementation ("androidx.room:room-testing:2.5.2")
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")      // JUnit for Android tests
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1") // Espresso UI testing
+    // For coroutine testing
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
+// For mocking
+    testImplementation ("io.mockk:mockk:1.13.5")
+
+
 
 }
