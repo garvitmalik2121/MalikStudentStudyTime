@@ -1,5 +1,6 @@
 package com.malik21.malikstudentstudytime
 
+import HelpScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -100,6 +101,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("account") {
                             AccountScreen(navController = navController)
+                        }
+                        composable("help") {
+                            HelpScreen(navController = navController)
                         }
 
                         // ✅ Pass theme toggle handler to settings
