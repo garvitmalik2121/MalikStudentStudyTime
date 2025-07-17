@@ -16,7 +16,7 @@ fun List<TaskItem>.toNotifications(): List<TaskNotification> {
         TaskNotification(
             id = index,
             title = task.title,
-            dueDate = task.dueDate ?: "No due date",
+            dueDate = task.dueDate,
             isReminder = isReminder
         )
     }

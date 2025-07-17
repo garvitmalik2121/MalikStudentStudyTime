@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
                             SimpleCalendarScreen(navController = navController, viewModel = taskViewModel)
                         }
                         composable("account") {
-                            AccountScreen(navController = navController)
+                            AccountScreen()
                         }
                         composable("help") {
                             HelpScreen(navController = navController)

@@ -1,12 +1,31 @@
 package com.malik21.malikstudentstudytime.screen
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Brightness4
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Help
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -114,19 +133,7 @@ fun SettingsScreen(
             }
 
             // About
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { /* show about info */ },
-                shape = RoundedCornerShape(12.dp),
-                elevation = CardDefaults.cardElevation(4.dp)
-            ) {
-                ListItem(
-                    headlineContent = { Text("About This App") },
-                    supportingContent = { Text("Version 1.0.0") },
-                    leadingContent = { Icon(Icons.Default.Info, contentDescription = null) }
-                )
-            }
+
         }
     }
 }

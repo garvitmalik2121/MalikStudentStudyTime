@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,12 +31,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.malik21.malikstudentstudytime.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountScreen(navController: NavController) {
+fun AccountScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -121,7 +120,8 @@ fun AccountScreen(navController: NavController) {
                     },
                     leadingContent = {
                         Icon(
-                            imageVector = Icons.Default.ExitToApp,
+                            imageVector = Icons.AutoMirrored.Filled.ExitToApp
+                            ,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onErrorContainer
                         )
