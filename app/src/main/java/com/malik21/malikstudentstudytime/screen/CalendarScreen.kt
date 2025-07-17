@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.malik21.malikstudentstudytime.viewmodel.TaskViewModel
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -38,12 +37,12 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun SimpleCalendarScreen(navController: NavController, viewModel: TaskViewModel) {
+fun SimpleCalendarScreen(viewModel: TaskViewModel) {
     val tasks by viewModel.tasks.collectAsState()
     val datesWithTasks = remember(tasks) {
-        tasks.mapNotNull { it.dueDate }
-            .mapNotNull { LocalDate.parse(it) }
-            .toSet()
+        tasks.mapNotNull { task ->
+            task.dueDate.let { LocalDate.parse(it) }
+        }.toSet()
     }
 
     var currentYearMonth by remember { mutableStateOf(YearMonth.now()) }
@@ -93,7 +92,8 @@ fun MonthNavigation(
 
 @Composable
 fun DaysOfWeekHeader() {
-    val daysOfWeek = DayOfWeek.values()
+    val daysOfWeek = DayOfWeek.entries
+
     Row(modifier = Modifier.fillMaxWidth()) {
         for (day in daysOfWeek) {
             Text(

@@ -97,7 +97,7 @@ class MainActivity : ComponentActivity() {
                             NotificationsScreen(navController = navController, viewModel = taskViewModel)
                         }
                         composable("calendar") {
-                            SimpleCalendarScreen(navController = navController, viewModel = taskViewModel)
+                            SimpleCalendarScreen(viewModel = taskViewModel)
                         }
                         composable("account") {
                             AccountScreen()
