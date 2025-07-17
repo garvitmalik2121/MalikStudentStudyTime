@@ -94,4 +94,8 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("androidx.compose.material:material-icons-extended:<compose_version>")
 
+    // Instrumented testing dependencies
+    androidTestImplementation ("androidx.test.ext:junit:1.1.5")      // JUnit for Android tests
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1") // Espresso UI testing
+
 }
