@@ -43,7 +43,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.malik21.malikstudentstudytime.R
 import com.malik21.malikstudentstudytime.data.TaskItem
 import com.malik21.malikstudentstudytime.viewmodel.TaskViewModel
@@ -52,7 +51,7 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TasksScreen(navController: NavController, viewModel: TaskViewModel) {
+fun TasksScreen(viewModel: TaskViewModel) {
     val tasks by viewModel.tasks.collectAsState()
     val context = LocalContext.current
     val player = remember { MediaPlayer.create(context, R.raw.click_sound) }
@@ -127,7 +126,7 @@ fun TaskCard(task: TaskItem, onCheckedChange: (Boolean) -> Unit, onDelete: () ->
                     style = MaterialTheme.typography.titleMedium,
                     textDecoration = if (task.isCompleted) androidx.compose.ui.text.style.TextDecoration.LineThrough else null
                 )
-                task.dueDate?.let {
+                task.dueDate.let {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(text = "Due: $it", style = MaterialTheme.typography.bodyMedium)
                 }

@@ -20,13 +20,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.malik21.malikstudentstudytime.data.TaskNotification
 import com.malik21.malikstudentstudytime.data.toNotifications
 import com.malik21.malikstudentstudytime.viewmodel.TaskViewModel
 
 @Composable
-fun NotificationsScreen(navController: NavHostController, viewModel: TaskViewModel) {
+fun NotificationsScreen(viewModel: TaskViewModel) {
     val tasks by viewModel.tasks.collectAsState()
     val notifications = tasks.toNotifications()
 

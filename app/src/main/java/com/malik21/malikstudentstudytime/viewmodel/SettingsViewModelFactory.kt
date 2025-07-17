@@ -10,6 +10,10 @@ import com.malik21.malikstudentstudytime.data.UserPreferences
 class SettingsViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val preferences = UserPreferences(context)
-        return SettingsViewModel(preferences) as T
+        if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return SettingsViewModel(preferences) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

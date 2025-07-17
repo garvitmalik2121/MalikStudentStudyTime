@@ -91,10 +91,10 @@ class MainActivity : ComponentActivity() {
                             DashboardScreen(navController = navController)
                         }
                         composable("tasks") {
-                            TasksScreen(navController = navController, viewModel = taskViewModel)
+                            TasksScreen(viewModel = taskViewModel)
                         }
                         composable("notification") {
-                            NotificationsScreen(navController = navController, viewModel = taskViewModel)
+                            NotificationsScreen(viewModel = taskViewModel)
                         }
                         composable("calendar") {
                             SimpleCalendarScreen(viewModel = taskViewModel)
