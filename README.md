@@ -38,12 +38,7 @@
 
 ---
 
-## 📸 Screenshots
 
-> _Add screenshots or screen recordings here to showcase the app UI_  
-> (Example: Task List View, Calendar View, Notification Prompt)
-
----
 
 ## 🚀 Getting Started
 
